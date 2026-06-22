@@ -58,7 +58,7 @@ $daftarMagang  = $objekMagang->tampilkanProfilKaryawan($koneksi);
                             <th class="p-4 text-right">Gaji / Hari</th>
                             <th class="p-4">Durasi Kontrak</th>
                             <th class="p-4">Agensi Penyalur</th>
-                            <th class="p-4 text-right text-pink-600 font-bold">Gaji Bersih (Polimorfisme)</th>
+                            <th class="p-4 text-right text-pink-600 font-bold">Gaji Bersih</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-pink-50 text-gray-700 text-sm">
@@ -94,7 +94,7 @@ $daftarMagang  = $objekMagang->tampilkanProfilKaryawan($koneksi);
                             <th class="p-4 text-right">Gaji / Hari</th>
                             <th class="p-4 text-right">Tunjangan Kesehatan</th>
                             <th class="p-4 text-center">Opsi Saham ID</th>
-                            <th class="p-4 text-right text-rose-600 font-bold">Gaji Bersih (Polimorfisme)</th>
+                            <th class="p-4 text-right text-rose-600 font-bold">Gaji Bersih</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-pink-50 text-gray-700 text-sm">
@@ -130,7 +130,7 @@ $daftarMagang  = $objekMagang->tampilkanProfilKaryawan($koneksi);
                             <th class="p-4 text-right">Gaji / Hari</th>
                             <th class="p-4 text-right">Uang Saku Bulanan</th>
                             <th class="p-4">Sertifikat Kampus Merdeka</th>
-                            <th class="p-4 text-right text-fuchsia-600 font-bold">Gaji Bersih (Polimorfisme)</th>
+                            <th class="p-4 text-right text-fuchsia-600 font-bold">Gaji Bersih</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-pink-50 text-gray-700 text-sm">
