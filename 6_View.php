@@ -36,12 +36,15 @@ $totalKaryawan = count($daftarKontrak) + count($daftarTetap) + count($daftarMaga
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-16">
 
+    <!-- TOP GLOW BACKGROUND EFFECT (PINK CERAH) -->
     <div class="absolute top-0 left-0 right-0 h-80 bg-gradient-to-b from-pink-200/60 to-transparent -z-10"></div>
 
+    <!-- NAVBAR UTAMA -->
     <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-pink-200 px-6 py-4 shadow-md shadow-pink-100/50">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
-                <div class="h-11 w-11 rounded-xl bg-gradient-to-tr from-pink-500 via-rose-500 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-pink-300/80 animate-bounce-short">
+                <!-- LOGO HURUF Q DENGAN GRADASI PINK CERAH -->
+                <div class="h-11 w-11 rounded-xl bg-gradient-to-tr from-pink-500 via-rose-500 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-pink-300/80">
                     <span class="text-white font-extrabold text-2xl tracking-tighter font-mono">Q</span>
                 </div>
                 <div>
@@ -50,13 +53,16 @@ $totalKaryawan = count($daftarKontrak) + count($daftarTetap) + count($daftarMaga
                 </div>
             </div>
 
+            <!-- IDENTITAS CEO & DROPDOWN FILTER -->
             <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto justify-end">
+                <!-- Sesi Nama Pengguna (CEO) -->
                 <div class="flex items-center gap-2 bg-pink-100 border border-pink-300 px-4 py-2 rounded-xl shadow-sm">
                     <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
                     <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">CEO:</span>
                     <span class="text-sm font-black text-pink-600 font-mono tracking-widest">QoHFi</span>
                 </div>
 
+                <!-- Dropdown Filter -->
                 <div class="flex items-center gap-2 bg-pink-100/80 border border-pink-300 rounded-xl p-1.5 shadow-md w-full sm:w-auto">
                     <select id="filterView" onchange="ubahTampilan()" class="bg-white text-slate-800 text-sm font-bold rounded-lg border border-pink-200 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer w-full sm:w-auto transition-all">
                         <option value="semua-terpisah">📑 Semua Tabel Terpisah</option>
@@ -70,29 +76,40 @@ $totalKaryawan = count($daftarKontrak) + count($daftarTetap) + count($daftarMaga
         </div>
     </nav>
 
+    <!-- MAIN CONTAINER -->
     <main class="max-w-7xl mx-auto px-6 mt-8">
 
+        <!-- WIDGET STATISTIK CEPAT (BISA DIKLIK) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between transition-transform hover:scale-105 duration-300">
+            <!-- Box Total Staf -->
+            <div onclick="filterLewatBox('semua-terpisah')" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-md hover:border-slate-400 select-none">
                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Staf</span>
                 <span class="text-3xl font-extrabold text-slate-800 mt-2"><?= $totalKaryawan ?> <span class="text-xs font-medium text-slate-400">Orang</span></span>
             </div>
-            <div class="bg-white p-5 rounded-2xl border-2 border-pink-400 shadow-md flex flex-col justify-between bg-gradient-to-br from-white to-pink-50 transition-transform hover:scale-105 duration-300">
+
+            <!-- Box Staf Kontrak -->
+            <div onclick="filterLewatBox('tabel-kontrak')" class="bg-white p-5 rounded-2xl border-2 border-pink-400 shadow-md flex flex-col justify-between bg-gradient-to-br from-white to-pink-50/30 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:from-pink-50/50 select-none">
                 <span class="text-xs font-bold text-pink-500 uppercase tracking-wider">Staf Kontrak</span>
                 <span class="text-3xl font-extrabold text-pink-600 mt-2"><?= count($daftarKontrak) ?></span>
             </div>
-            <div class="bg-white p-5 rounded-2xl border-2 border-rose-400 shadow-md flex flex-col justify-between bg-gradient-to-br from-white to-rose-50 transition-transform hover:scale-105 duration-300">
+
+            <!-- Box Staf Tetap -->
+            <div onclick="filterLewatBox('tabel-tetap')" class="bg-white p-5 rounded-2xl border-2 border-rose-400 shadow-md flex flex-col justify-between bg-gradient-to-br from-white to-rose-50/30 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:from-rose-50/50 select-none">
                 <span class="text-xs font-bold text-rose-500 uppercase tracking-wider">Staf Tetap</span>
                 <span class="text-3xl font-extrabold text-rose-600 mt-2"><?= count($daftarTetap) ?></span>
             </div>
-            <div class="bg-white p-5 rounded-2xl border-2 border-fuchsia-400 shadow-md flex flex-col justify-between bg-gradient-to-br from-white to-fuchsia-50 transition-transform hover:scale-105 duration-300">
+
+            <!-- Box Staf Magang -->
+            <div onclick="filterLewatBox('tabel-magang')" class="bg-white p-5 rounded-2xl border-2 border-fuchsia-400 shadow-md flex flex-col justify-between bg-gradient-to-br from-white to-fuchsia-50/30 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:from-fuchsia-50/50 select-none">
                 <span class="text-xs font-bold text-fuchsia-500 uppercase tracking-wider">Staf Magang</span>
                 <span class="text-3xl font-extrabold text-fuchsia-600 mt-2"><?= count($daftarMagang) ?></span>
             </div>
         </div>
 
+        <!-- ==================== MODE 1: TABEL TERKELOMPOK (TERPISAH) ==================== -->
         <div id="wrapperTerpisah" class="space-y-10">
 
+            <!-- SEKSI TABEL KONTRAK -->
             <section id="sectionKontrak" class="bg-white rounded-2xl shadow-md border border-pink-100 overflow-hidden transition-all duration-300">
                 <div class="bg-gradient-to-r from-pink-500 via-pink-600 to-fuchsia-600 text-white px-6 py-4 flex justify-between items-center">
                     <div class="flex items-center gap-2">
@@ -132,6 +149,7 @@ $totalKaryawan = count($daftarKontrak) + count($daftarTetap) + count($daftarMaga
                 </div>
             </section>
 
+            <!-- SEKSI TABEL TETAP -->
             <section id="sectionTetap" class="bg-white rounded-2xl shadow-md border border-rose-100 overflow-hidden transition-all duration-300">
                 <div class="bg-gradient-to-r from-rose-500 via-rose-600 to-pink-600 text-white px-6 py-4 flex justify-between items-center">
                     <div class="flex items-center gap-2">
@@ -171,6 +189,7 @@ $totalKaryawan = count($daftarKontrak) + count($daftarTetap) + count($daftarMaga
                 </div>
             </section>
 
+            <!-- SEKSI TABEL MAGANG -->
             <section id="sectionMagang" class="bg-white rounded-2xl shadow-md border border-fuchsia-100 overflow-hidden transition-all duration-300">
                 <div class="bg-gradient-to-r from-fuchsia-500 via-fuchsia-600 to-rose-500 text-white px-6 py-4 flex justify-between items-center">
                     <div class="flex items-center gap-2">
@@ -212,6 +231,7 @@ $totalKaryawan = count($daftarKontrak) + count($daftarTetap) + count($daftarMaga
         </div>
 
 
+        <!-- ==================== MODE 2: SATU TABEL BESAR (GABUNGAN) ==================== -->
         <div id="wrapperSatuTabel" class="hidden bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden transition-all duration-300">
             <div class="bg-gradient-to-r from-slate-700 to-slate-800 text-white px-6 py-4">
                 <h2 class="font-extrabold tracking-wide flex items-center gap-2"><span class="text-xl">📊</span> Semua Data Karyawan (Satu Tabel Besar)</h2>
@@ -229,6 +249,7 @@ $totalKaryawan = count($daftarKontrak) + count($daftarTetap) + count($daftarMaga
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 text-slate-600 text-sm font-medium">
+                        <!-- Looping Kontrak -->
                         <?php foreach ($daftarKontrak as $k): ?>
                         <tr class="hover:bg-slate-50/50">
                             <td class="p-4 font-bold text-slate-900"><?= $k->getNama() ?></td>
@@ -240,6 +261,7 @@ $totalKaryawan = count($daftarKontrak) + count($daftarTetap) + count($daftarMaga
                         </tr>
                         <?php endforeach; ?>
 
+                        <!-- Looping Tetap -->
                         <?php foreach ($daftarTetap as $k): ?>
                         <tr class="hover:bg-slate-50/50">
                             <td class="p-4 font-bold text-slate-900"><?= $k->getNama() ?></td>
@@ -251,6 +273,7 @@ $totalKaryawan = count($daftarKontrak) + count($daftarTetap) + count($daftarMaga
                         </tr>
                         <?php endforeach; ?>
 
+                        <!-- Looping Magang -->
                         <?php foreach ($daftarMagang as $k): ?>
                         <tr class="hover:bg-slate-50/50">
                             <td class="p-4 font-bold text-slate-900"><?= $k->getNama() ?></td>
@@ -268,11 +291,20 @@ $totalKaryawan = count($daftarKontrak) + count($daftarTetap) + count($daftarMaga
 
     </main>
 
+    <!-- FOOTER -->
     <footer class="text-center text-xs text-slate-400 font-medium mt-16">
         &copy; 2026 <span class="font-extrabold text-pink-500 font-mono">QoHFi Corp</span> — Seluruh Hak Cipta Dilindungi Undang-Undang. Dikembangkan khusus oleh CEO QoHFi untuk UAS Pemrograman Berorientasi Objek.
     </footer>
 
+    <!-- JAVASCRIPT LOGIK FILTER -->
     <script>
+    // Fungsi baru untuk menangani klik pada box statistik
+    function filterLewatBox(valuePilihan) {
+        const dropdown = document.getElementById('filterView');
+        dropdown.value = valuePilihan; // Set nilai dropdown secara otomatis
+        ubahTampilan(); // Jalankan fungsi filter
+    }
+
     function ubahTampilan() {
         const pilihan = document.getElementById('filterView').value;
 
