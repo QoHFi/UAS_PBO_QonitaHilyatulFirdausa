@@ -1,6 +1,6 @@
 <?php
 // KaryawanMagang.php
-require_once '1_Karyawan.php';
+require_once '2_Karyawan.php';
 
 class KaryawanMagang extends Karyawan {
     // Properti tambahan spesifik
