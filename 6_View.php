@@ -17,6 +17,9 @@ $objekMagang  = new KaryawanMagang();
 $daftarKontrak = $objekKontrak->tampilkanProfilKaryawan($koneksi);
 $daftarTetap   = $objekTetap->tampilkanProfilKaryawan($koneksi);
 $daftarMagang  = $objekMagang->tampilkanProfilKaryawan($koneksi);
+
+// Hitung total karyawan untuk widget statistik
+$totalKaryawan = count($daftarKontrak) + count($daftarTetap) + count($daftarMagang);
 ?>
 
 <!DOCTYPE html>
@@ -24,62 +27,104 @@ $daftarMagang  = $objekMagang->tampilkanProfilKaryawan($koneksi);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Manajemen Karyawan - PBO Filter</title>
+    <title>QoHFi Corp - Dashboard Manajemen Karyawan</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
 </head>
-<body class="bg-pink-50 font-sans min-h-screen pb-12">
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-16">
 
-    <header class="bg-gradient-to-r from-pink-500 to-rose-400 text-white py-6 px-8 shadow-md mb-6">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div>
-                <h1 class="text-3xl font-extrabold tracking-wide">🎀 PINK CORP</h1>
-                <p class="text-pink-100 text-sm mt-1">Sistem Informasi Data Karyawan - Fitur Filter Interaktif</p>
-                <p class="text-pink-100 text-sm mt-1">by QoHFi</p>
+    <div class="absolute top-0 left-0 right-0 h-80 bg-gradient-to-b from-pink-200/60 to-transparent -z-10"></div>
+
+    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-pink-200 px-6 py-4 shadow-md shadow-pink-100/50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="h-11 w-11 rounded-xl bg-gradient-to-tr from-pink-500 via-rose-500 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-pink-300/80 animate-bounce-short">
+                    <span class="text-white font-extrabold text-2xl tracking-tighter font-mono">Q</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tight bg-gradient-to-r from-pink-500 via-pink-600 to-fuchsia-600 bg-clip-text text-transparent">🎀 QoHFi Corp</h1>
+                    <p class="text-xs text-pink-500 font-bold tracking-wide uppercase">Sistem Informasi PBO Kelompok Karyawan</p>
+                </div>
             </div>
 
-            <div class="flex items-center gap-2 bg-white/20 p-2 rounded-xl backdrop-blur-sm">
-                <label for="filterView" class="text-sm font-semibold whitespace-nowrap text-white">Tampilkan:</label>
-                <select id="filterView" onchange="ubahTampilan()" class="bg-white text-gray-700 text-sm font-medium rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-pink-300">
-                    <option value="semua-terpisah">Semua Tabel</option>
-                    <option value="tabel-kontrak">Hanya Karyawan Kontrak</option>
-                    <option value="tabel-tetap">Hanya Karyawan Tetap</option>
-                    <option value="tabel-magang">Hanya Karyawan Magang</option>
-                    <option value="satu-tabel-besar">Semua Data</option>
-                </select>
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto justify-end">
+                <div class="flex items-center gap-2 bg-pink-100 border border-pink-300 px-4 py-2 rounded-xl shadow-sm">
+                    <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">CEO:</span>
+                    <span class="text-sm font-black text-pink-600 font-mono tracking-widest">QoHFi</span>
+                </div>
+
+                <div class="flex items-center gap-2 bg-pink-100/80 border border-pink-300 rounded-xl p-1.5 shadow-md w-full sm:w-auto">
+                    <select id="filterView" onchange="ubahTampilan()" class="bg-white text-slate-800 text-sm font-bold rounded-lg border border-pink-200 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-500 cursor-pointer w-full sm:w-auto transition-all">
+                        <option value="semua-terpisah">📑 Semua Tabel Terpisah</option>
+                        <option value="tabel-kontrak">📝 Hanya Karyawan Kontrak</option>
+                        <option value="tabel-tetap">💎 Hanya Karyawan Tetap</option>
+                        <option value="tabel-magang">🎓 Hanya Karyawan Magang</option>
+                        <option value="satu-tabel-besar">📊 Gabungkan Semua Data</option>
+                    </select>
+                </div>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <main class="max-w-7xl mx-auto px-4">
+    <main class="max-w-7xl mx-auto px-6 mt-8">
 
-        <div id="wrapperTerpisah" class="space-y-12">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between transition-transform hover:scale-105 duration-300">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Staf</span>
+                <span class="text-3xl font-extrabold text-slate-800 mt-2"><?= $totalKaryawan ?> <span class="text-xs font-medium text-slate-400">Orang</span></span>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border-2 border-pink-400 shadow-md flex flex-col justify-between bg-gradient-to-br from-white to-pink-50 transition-transform hover:scale-105 duration-300">
+                <span class="text-xs font-bold text-pink-500 uppercase tracking-wider">Staf Kontrak</span>
+                <span class="text-3xl font-extrabold text-pink-600 mt-2"><?= count($daftarKontrak) ?></span>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border-2 border-rose-400 shadow-md flex flex-col justify-between bg-gradient-to-br from-white to-rose-50 transition-transform hover:scale-105 duration-300">
+                <span class="text-xs font-bold text-rose-500 uppercase tracking-wider">Staf Tetap</span>
+                <span class="text-3xl font-extrabold text-rose-600 mt-2"><?= count($daftarTetap) ?></span>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border-2 border-fuchsia-400 shadow-md flex flex-col justify-between bg-gradient-to-br from-white to-fuchsia-50 transition-transform hover:scale-105 duration-300">
+                <span class="text-xs font-bold text-fuchsia-500 uppercase tracking-wider">Staf Magang</span>
+                <span class="text-3xl font-extrabold text-fuchsia-600 mt-2"><?= count($daftarMagang) ?></span>
+            </div>
+        </div>
 
-            <section id="sectionKontrak" class="bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden">
-                <div class="bg-pink-500 text-white px-6 py-4 flex justify-between items-center">
-                    <h2 class="text-lg font-bold tracking-wide">📝 Karyawan Kontrak</h2>
-                    <span class="bg-pink-700 text-xs px-3 py-1 rounded-full font-medium"><?= count($daftarKontrak) ?> Orang</span>
+        <div id="wrapperTerpisah" class="space-y-10">
+
+            <section id="sectionKontrak" class="bg-white rounded-2xl shadow-md border border-pink-100 overflow-hidden transition-all duration-300">
+                <div class="bg-gradient-to-r from-pink-500 via-pink-600 to-fuchsia-600 text-white px-6 py-4 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">📝</span>
+                        <h2 class="font-extrabold tracking-wide">Data Karyawan Kontrak</h2>
+                    </div>
+                    <span class="bg-white/20 backdrop-blur-md text-xs px-3 py-1 rounded-md font-bold uppercase tracking-wider">Subclass Kontrak</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-pink-50 text-pink-700 font-semibold text-sm border-b border-pink-100">
-                                <th class="p-4">Nama</th>
+                            <tr class="bg-pink-50/50 text-pink-700 font-bold text-xs uppercase tracking-wider border-b border-pink-100">
+                                <th class="p-4">Nama Lengkap</th>
                                 <th class="p-4">Departemen</th>
                                 <th class="p-4 text-center">Hari Kerja</th>
                                 <th class="p-4 text-right">Gaji / Hari</th>
-                                <th class="p-4">Atribut Spesifik</th>
-                                <th class="p-4 text-right text-pink-600 font-bold">Gaji Bersih</th>
+                                <th class="p-4 pl-8">Kontrak & Agensi</th>
+                                <th class="p-4 text-right text-pink-600 font-black bg-pink-100/40">Gaji Bersih</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-pink-50 text-gray-700 text-sm">
+                        <tbody class="divide-y divide-slate-100 text-slate-600 text-sm font-medium">
                             <?php foreach ($daftarKontrak as $k): ?>
-                            <tr class="hover:bg-pink-50/50 transition">
-                                <td class="p-4 font-medium text-gray-900"><?= $k->getNama() ?></td>
-                                <td class="p-4"><span class="bg-gray-100 text-gray-700 text-xs px-2.5 py-1 rounded-md font-medium"><?= $k->getDepartemen() ?></span></td>
-                                <td class="p-4 text-center"><?= $k->getHariKerja() ?> hari</td>
-                                <td class="p-4 text-right">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
-                                <td class="p-4 text-xs text-gray-500">Durasi: <?= $k->getDurasiKontrak() ?> Bln | Agensi: <?= $k->getAgensi() ?></td>
-                                <td class="p-4 text-right font-bold text-rose-500 bg-pink-50/30">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
+                            <tr class="hover:bg-pink-50/20 transition-colors">
+                                <td class="p-4 font-bold text-slate-900"><?= $k->getNama() ?></td>
+                                <td class="p-4"><span class="bg-pink-50 text-pink-600 border border-pink-200 text-xs px-2.5 py-1 rounded-md font-bold"><?= $k->getDepartemen() ?></span></td>
+                                <td class="p-4 text-center font-semibold"><?= $k->getHariKerja() ?> hari</td>
+                                <td class="p-4 text-right font-semibold">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
+                                <td class="p-4 pl-8 text-xs text-slate-500">
+                                    <span class="inline-block bg-pink-600 text-white font-bold px-2 py-0.5 rounded mr-1"><?= $k->getDurasiKontrak() ?> Bulan</span>
+                                    <span class="font-medium text-pink-700">via <?= $k->getAgensi() ?></span>
+                                </td>
+                                <td class="p-4 text-right font-black text-pink-600 bg-pink-50/40 text-base">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -87,32 +132,38 @@ $daftarMagang  = $objekMagang->tampilkanProfilKaryawan($koneksi);
                 </div>
             </section>
 
-            <section id="sectionTetap" class="bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden">
-                <div class="bg-rose-500 text-white px-6 py-4 flex justify-between items-center">
-                    <h2 class="text-lg font-bold tracking-wide">💎 Karyawan Tetap</h2>
-                    <span class="bg-rose-700 text-xs px-3 py-1 rounded-full font-medium"><?= count($daftarTetap) ?> Orang</span>
+            <section id="sectionTetap" class="bg-white rounded-2xl shadow-md border border-rose-100 overflow-hidden transition-all duration-300">
+                <div class="bg-gradient-to-r from-rose-500 via-rose-600 to-pink-600 text-white px-6 py-4 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">💎</span>
+                        <h2 class="font-extrabold tracking-wide">Data Karyawan Tetap</h2>
+                    </div>
+                    <span class="bg-white/20 backdrop-blur-md text-xs px-3 py-1 rounded-md font-bold uppercase tracking-wider">Subclass Tetap</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-rose-50 text-rose-700 font-semibold text-sm border-b border-pink-100">
-                                <th class="p-4">Nama</th>
+                            <tr class="bg-rose-50/50 text-rose-700 font-bold text-xs uppercase tracking-wider border-b border-rose-100">
+                                <th class="p-4">Nama Lengkap</th>
                                 <th class="p-4">Departemen</th>
                                 <th class="p-4 text-center">Hari Kerja</th>
                                 <th class="p-4 text-right">Gaji / Hari</th>
-                                <th class="p-4">Atribut Spesifik</th>
-                                <th class="p-4 text-right text-rose-600 font-bold">Gaji Bersih</th>
+                                <th class="p-4 pl-8">Tunjangan & Saham ID</th>
+                                <th class="p-4 text-right text-rose-600 font-black bg-rose-100/40">Gaji Bersih</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-pink-50 text-gray-700 text-sm">
+                        <tbody class="divide-y divide-slate-100 text-slate-600 text-sm font-medium">
                             <?php foreach ($daftarTetap as $k): ?>
-                            <tr class="hover:bg-rose-50/30 transition">
-                                <td class="p-4 font-medium text-gray-900"><?= $k->getNama() ?></td>
-                                <td class="p-4"><span class="bg-gray-100 text-gray-700 text-xs px-2.5 py-1 rounded-md font-medium"><?= $k->getDepartemen() ?></span></td>
-                                <td class="p-4 text-center"><?= $k->getHariKerja() ?> hari</td>
-                                <td class="p-4 text-right">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
-                                <td class="p-4 text-xs text-gray-500">Tunjangan: Rp <?= number_format($k->getTunjangan(), 0, ',', '.') ?> | Saham ID: <?= $k->getOpsiSaham() ?></td>
-                                <td class="p-4 text-right font-bold text-rose-600 bg-rose-50/20">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
+                            <tr class="hover:bg-rose-50/20 transition-colors">
+                                <td class="p-4 font-bold text-slate-900"><?= $k->getNama() ?></td>
+                                <td class="p-4"><span class="bg-rose-50 text-rose-600 border border-rose-200 text-xs px-2.5 py-1 rounded-md font-bold"><?= $k->getDepartemen() ?></span></td>
+                                <td class="p-4 text-center font-semibold"><?= $k->getHariKerja() ?> hari</td>
+                                <td class="p-4 text-right font-semibold">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
+                                <td class="p-4 pl-8 text-xs text-slate-500">
+                                    <span class="text-emerald-600 font-extrabold mr-2">+Rp <?= number_format($k->getTunjangan(), 0, ',', '.') ?></span>
+                                    <span class="font-mono bg-amber-100 text-amber-800 border border-amber-300 px-1.5 py-0.5 rounded font-bold"><?= $k->getOpsiSaham() ?></span>
+                                </td>
+                                <td class="p-4 text-right font-black text-rose-600 bg-rose-50/40 text-base">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -120,32 +171,38 @@ $daftarMagang  = $objekMagang->tampilkanProfilKaryawan($koneksi);
                 </div>
             </section>
 
-            <section id="sectionMagang" class="bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden">
-                <div class="bg-fuchsia-500 text-white px-6 py-4 flex justify-between items-center">
-                    <h2 class="text-lg font-bold tracking-wide">🎓 Karyawan Magang</h2>
-                    <span class="bg-fuchsia-700 text-xs px-3 py-1 rounded-full font-medium"><?= count($daftarMagang) ?> Orang</span>
+            <section id="sectionMagang" class="bg-white rounded-2xl shadow-md border border-fuchsia-100 overflow-hidden transition-all duration-300">
+                <div class="bg-gradient-to-r from-fuchsia-500 via-fuchsia-600 to-rose-500 text-white px-6 py-4 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">🎓</span>
+                        <h2 class="font-extrabold tracking-wide">Data Karyawan Magang</h2>
+                    </div>
+                    <span class="bg-white/20 backdrop-blur-md text-xs px-3 py-1 rounded-md font-bold uppercase tracking-wider">Subclass Magang</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-fuchsia-50 text-fuchsia-700 font-semibold text-sm border-b border-pink-100">
-                                <th class="p-4">Nama</th>
+                            <tr class="bg-fuchsia-50/50 text-fuchsia-700 font-bold text-xs uppercase tracking-wider border-b border-fuchsia-100">
+                                <th class="p-4">Nama Lengkap</th>
                                 <th class="p-4">Departemen</th>
                                 <th class="p-4 text-center">Hari Kerja</th>
                                 <th class="p-4 text-right">Gaji / Hari</th>
-                                <th class="p-4">Atribut Spesifik</th>
-                                <th class="p-4 text-right text-fuchsia-600 font-bold">Gaji Bersih</th>
+                                <th class="p-4 pl-8">Uang Saku & Program</th>
+                                <th class="p-4 text-right text-fuchsia-600 font-black bg-fuchsia-100/40">Gaji Bersih</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-pink-50 text-gray-700 text-sm">
+                        <tbody class="divide-y divide-slate-100 text-slate-600 text-sm font-medium">
                             <?php foreach ($daftarMagang as $k): ?>
-                            <tr class="hover:bg-fuchsia-50/30 transition">
-                                <td class="p-4 font-medium text-gray-900"><?= $k->getNama() ?></td>
-                                <td class="p-4"><span class="bg-gray-100 text-gray-700 text-xs px-2.5 py-1 rounded-md font-medium"><?= $k->getDepartemen() ?></span></td>
-                                <td class="p-4 text-center"><?= $k->getHariKerja() ?> hari</td>
-                                <td class="p-4 text-right">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
-                                <td class="p-4 text-xs text-gray-500">Uang Saku: Rp <?= number_format($k->getUangSaku(), 0, ',', '.') ?> | Program: <?= $k->getSertifikat() ?></td>
-                                <td class="p-4 text-right font-bold text-fuchsia-600 bg-fuchsia-50/20">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
+                            <tr class="hover:bg-fuchsia-50/20 transition-colors">
+                                <td class="p-4 font-bold text-slate-900"><?= $k->getNama() ?></td>
+                                <td class="p-4"><span class="bg-fuchsia-50 text-fuchsia-600 border border-fuchsia-200 text-xs px-2.5 py-1 rounded-md font-bold"><?= $k->getDepartemen() ?></span></td>
+                                <td class="p-4 text-center font-semibold"><?= $k->getHariKerja() ?> hari</td>
+                                <td class="p-4 text-right font-semibold">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
+                                <td class="p-4 pl-8 text-xs text-slate-500">
+                                    <span class="text-slate-800 font-bold mr-2">Saku: Rp <?= number_format($k->getUangSaku(), 0, ',', '.') ?></span>
+                                    <span class="text-purple-700 bg-purple-100 border border-purple-200 px-2 py-0.5 rounded font-bold"><?= $k->getSertifikat() ?></span>
+                                </td>
+                                <td class="p-4 text-right font-black text-fuchsia-600 bg-fuchsia-50/40 text-base">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -155,53 +212,53 @@ $daftarMagang  = $objekMagang->tampilkanProfilKaryawan($koneksi);
         </div>
 
 
-        <div id="wrapperSatuTabel" class="hidden bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden">
-            <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-4">
-                <h2 class="text-lg font-bold tracking-wide">📊 Semua Data Karyawan</h2>
+        <div id="wrapperSatuTabel" class="hidden bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden transition-all duration-300">
+            <div class="bg-gradient-to-r from-slate-700 to-slate-800 text-white px-6 py-4">
+                <h2 class="font-extrabold tracking-wide flex items-center gap-2"><span class="text-xl">📊</span> Semua Data Karyawan (Satu Tabel Besar)</h2>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-purple-50 text-purple-700 font-semibold text-sm border-b border-pink-100">
-                            <th class="p-4">Nama</th>
-                            <th class="p-4">Jenis Karyawan</th>
+                        <tr class="bg-slate-50 text-slate-500 font-bold text-xs uppercase tracking-wider border-b border-slate-100">
+                            <th class="p-4">Nama Lengkap</th>
+                            <th class="p-4">Tipe Karyawan</th>
                             <th class="p-4">Departemen</th>
                             <th class="p-4 text-center">Hari Kerja</th>
                             <th class="p-4 text-right">Gaji Dasar / Hari</th>
-                            <th class="p-4 text-right text-purple-700 font-bold">Gaji Bersih</th>
+                            <th class="p-4 text-right text-pink-600 font-black bg-pink-50/20">Gaji Bersih</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-pink-50 text-gray-700 text-sm">
+                    <tbody class="divide-y divide-slate-100 text-slate-600 text-sm font-medium">
                         <?php foreach ($daftarKontrak as $k): ?>
-                        <tr class="hover:bg-pink-50/30">
-                            <td class="p-4 font-medium text-gray-900"><?= $k->getNama() ?></td>
-                            <td class="p-4"><span class="bg-pink-100 text-pink-700 text-xs px-2 py-0.5 rounded-full font-bold">Kontrak</span></td>
-                            <td class="p-4"><?= $k->getDepartemen() ?></td>
-                            <td class="p-4 text-center"><?= $k->getHariKerja() ?></td>
-                            <td class="p-4 text-right">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
-                            <td class="p-4 text-right font-bold text-rose-500">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-bold text-slate-900"><?= $k->getNama() ?></td>
+                            <td class="p-4"><span class="bg-pink-600 text-white text-xs px-2.5 py-1 rounded-full font-black">Kontrak</span></td>
+                            <td class="p-4 font-semibold"><?= $k->getDepartemen() ?></td>
+                            <td class="p-4 text-center font-semibold"><?= $k->getHariKerja() ?> hari</td>
+                            <td class="p-4 text-right font-semibold">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
+                            <td class="p-4 text-right font-black text-pink-600 bg-pink-50/20 text-base">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
                         </tr>
                         <?php endforeach; ?>
 
                         <?php foreach ($daftarTetap as $k): ?>
-                        <tr class="hover:bg-rose-50/30">
-                            <td class="p-4 font-medium text-gray-900"><?= $k->getNama() ?></td>
-                            <td class="p-4"><span class="bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded-full font-bold">Tetap</span></td>
-                            <td class="p-4"><?= $k->getDepartemen() ?></td>
-                            <td class="p-4 text-center"><?= $k->getHariKerja() ?></td>
-                            <td class="p-4 text-right">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
-                            <td class="p-4 text-right font-bold text-rose-600">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-bold text-slate-900"><?= $k->getNama() ?></td>
+                            <td class="p-4"><span class="bg-rose-600 text-white text-xs px-2.5 py-1 rounded-full font-black">Tetap</span></td>
+                            <td class="p-4 font-semibold"><?= $k->getDepartemen() ?></td>
+                            <td class="p-4 text-center font-semibold"><?= $k->getHariKerja() ?> hari</td>
+                            <td class="p-4 text-right font-semibold">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
+                            <td class="p-4 text-right font-black text-rose-600 bg-pink-50/20 text-base">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
                         </tr>
                         <?php endforeach; ?>
 
                         <?php foreach ($daftarMagang as $k): ?>
-                        <tr class="hover:bg-fuchsia-50/30">
-                            <td class="p-4 font-medium text-gray-900"><?= $k->getNama() ?></td>
-                            <td class="p-4"><span class="bg-fuchsia-100 text-fuchsia-700 text-xs px-2 py-0.5 rounded-full font-bold">Magang</span></td>
-                            <td class="p-4"><?= $k->getDepartemen() ?></td>
-                            <td class="p-4 text-center"><?= $k->getHariKerja() ?></td>
-                            <td class="p-4 text-right">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
-                            <td class="p-4 text-right font-bold text-fuchsia-600">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-bold text-slate-900"><?= $k->getNama() ?></td>
+                            <td class="p-4"><span class="bg-fuchsia-600 text-white text-xs px-2.5 py-1 rounded-full font-black">Magang</span></td>
+                            <td class="p-4 font-semibold"><?= $k->getDepartemen() ?></td>
+                            <td class="p-4 text-center font-semibold"><?= $k->getHariKerja() ?> hari</td>
+                            <td class="p-4 text-right font-semibold">Rp <?= number_format($k->getGajiDasar(), 0, ',', '.') ?></td>
+                            <td class="p-4 text-right font-black text-fuchsia-600 bg-pink-50/20 text-base">Rp <?= number_format($k->hitungGajiBersih(), 0, ',', '.') ?></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -210,6 +267,10 @@ $daftarMagang  = $objekMagang->tampilkanProfilKaryawan($koneksi);
         </div>
 
     </main>
+
+    <footer class="text-center text-xs text-slate-400 font-medium mt-16">
+        &copy; 2026 <span class="font-extrabold text-pink-500 font-mono">QoHFi Corp</span> — Seluruh Hak Cipta Dilindungi Undang-Undang. Dikembangkan khusus oleh CEO QoHFi untuk UAS Pemrograman Berorientasi Objek.
+    </footer>
 
     <script>
     function ubahTampilan() {
