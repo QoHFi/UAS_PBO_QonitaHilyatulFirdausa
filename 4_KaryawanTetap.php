@@ -36,10 +36,10 @@ class KaryawanTetap extends Karyawan {
         }
         return $daftarKaryawan;
     }
-
-    // Implementasi awal abstract method
+// Overriding method dari class induk Karyawan
     public function hitungGajiBersih() {
-        return 0;
+        $gajiBersih = ($this->hariKerjaMasuk * $this->gajiDasarPerHari) + $this->tunjanganKesehatan;
+        return $gajiBersih;
     }
 
     // Getter untuk keperluan View di Tahap 6

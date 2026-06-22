@@ -39,8 +39,10 @@ class KaryawanKontrak extends Karyawan {
     }
 
     // Implementasi awal abstract method (Logika detail di Tahap 5)
+    // Overriding method dari class induk Karyawan
     public function hitungGajiBersih() {
-        return 0;
+        $gajiBersih = $this->hariKerjaMasuk * $this->gajiDasarPerHari;
+        return $gajiBersih;
     }
 
     // Getter untuk keperluan View di Tahap 6
